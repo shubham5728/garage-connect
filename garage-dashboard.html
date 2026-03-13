@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage Dashboard - GarageMechanic</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-car-wrench"></i> Garage<span>Connect</span>
+        </div>
+        <ul class="nav">
+            <li class="active" data-target="dashboard"><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li data-target="bookings"><a href="#"><i class="fas fa-calendar-check"></i> Bookings</a></li>
+            <li data-target="services"><a href="#"><i class="fas fa-tools"></i> My Services</a></li>
+            <li data-target="profile"><a href="#"><i class="fas fa-store"></i> Garage Profile</a></li>
+            <li class="logout"><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h2>Welcome, Pro Auto Works!</h2>
+            <div class="header-icons">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-cog"></i>
+            </div>
+        </header>
+
+        <main>
+            <section id="dashboard" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-day"></i>
+                        <div>
+                            <h3>Today's Bookings</h3>
+                            <p>5</p>
+                        </div>
+                    </div>
+                     <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <div>
+                            <h3>Revenue (This Month)</h3>
+                            <p>Rs. 40,000</p>
+                        </div>
+                    </div>
+                     <div class="stat-card">
+                        <i class="fas fa-star"></i>
+                        <div>
+                            <h3>Average Rating</h3>
+                            <p>4.8 / 5</p>
+                        </div>
+                    </div>
+                </div>
+                <h3>Recent Booking Requests</h3>
+                <div class="booking-card">
+                    <h4>Oil Change for a Sedan</h4>
+                    <p><strong>Customer:</strong>Sanjay Shah</p>
+                    <p><i class="fas fa-calendar-alt"></i> Requested: September 6, 2025 at 11:00 AM</p>
+                    <div>
+                        <button class="approve-btn">Approve</button>
+                        <button class="decline-btn">Decline</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="bookings" class="content-section">
+                <h2>All Bookings</h2>
+                <div class="booking-card">
+                    <h4>Full Vehicle Service</h4>
+                    <p><strong>Customer:</strong>Meet Pandey</p>
+                    <p><i class="fas fa-calendar-alt"></i> Date: September 5, 2025</p>
+                    <p><span class="status upcoming">Upcoming</span></p>
+                </div>
+                <div class="booking-card">
+                    <h4>Replace Air Filter</h4>
+                    <p><strong>Customer:</strong>Nilesh Suthar</p>
+                    <p><i class="fas fa-calendar-alt"></i> Date: September 6, 2025</p>
+                    <p><span class="status upcoming">Upcoming</span></p>
+                </div>
+            </section>
+
+             <section id="services" class="content-section">
+                 <h2>Manage Your Services</h2>
+                 <div class="service-card">
+                    <h4>Full Vehicle Service(Honda Activa)</h4>
+                    <p><strong>Price:</strong> Rs.1000</p>
+                    <p><strong>Vehicle Types:</strong> 2-Wheeler</p>
+                    <button>Edit</button>
+                 </div>
+                 <div class="service-card">
+                    <h4>Part Replacement</h4>
+                    <p><strong>Price:</strong> Rs.Based on different Part</p>
+                    <p><strong>Vehicle Types:</strong> 2-Wheeler, 4-Wheeler</p>
+                    <button>Edit</button>
+                 </div>
+                 <div class="service-card">
+                    <h4>Full Vehicle Service(GT 650)</h4>
+                    <p><strong>Price:</strong> Rs.4000</p>
+                    <p><strong>Vehicle Types:</strong> 2-Wheeler</p>
+                    <button>Edit</button>
+                 </div>
+                 <button class="add-btn">+ Add New Service</button>
+            </section>
+
+            <section id="profile" class="content-section">
+                 <h2>Your Garage Profile</h2>
+                 <form class="profile-form">
+                     <input type="text" value="Pro Auto Works">
+                     <br>
+                     <b>Owner Name</b>
+                     <input type="text" value="Raj Patel">
+                     <br>
+                     <b>Conatac no.</b>
+                     <input type="text" value="+91 9876543210">
+                     <br>
+                     <b>Address</b>
+                     <input type="text" value="Near Vaishnodevi Circle, Ahmedabad, Gujarat">                   
+                     <br>
+                     <b>Description</b>
+                     <textarea>Apex Auto Garage is a trusted automotive service center dedicated to providing high-quality vehicle maintenance and repair solutions. With a team of certified technicians and state-of-the-art diagnostic tools, we handle everything from routine servicing and oil changes to complex engine repairs and performance upgrades.</textarea>
+                     <button>Update Profile</button>
+                 </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Service Modal -->
+    <div id="addServiceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Service</h3>
+                <span class="close-btn">&times;</span>
+            </div>
+            <form id="addServiceForm">
+                <input type="text" id="sName" placeholder="Service Name (e.g. Engine Tuning)" required>
+                <input type="number" id="sPrice" placeholder="Base Price (Rs.)" required>
+                <label style="display:block; margin-bottom: 5px; font-weight:bold;">Supported Vehicles:</label>
+                <div style="display:flex; gap:15px; margin-bottom:15px;">
+                    <label><input type="checkbox" id="vType4" value="FOUR_WHEELER" checked style="width:auto; margin:0"> 4-Wheeler</label>
+                    <label><input type="checkbox" id="vType2" value="TWO_WHEELER" style="width:auto; margin:0"> 2-Wheeler</label>
+                </div>
+                <button type="submit">Add Service</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/garage-dashboard.js"></script>
+</body>
+</html>

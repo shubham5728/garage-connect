@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Garage Service - GarageConnect</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .booking-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .garage-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .service-selection {
+            margin-bottom: 30px;
+        }
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .service-item:hover {
+            border-color: #409db6;
+            background: #f9fdfd;
+        }
+        .service-item.selected {
+            border-color: #409db6;
+            background: #eef9fb;
+            box-shadow: 0 2px 8px rgba(64,157,182,0.1);
+        }
+        .service-item input {
+            width: auto;
+            margin-left: 15px;
+        }
+        .booking-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .total-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1C2529;
+            text-align: right;
+            margin-top: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .btn-book {
+            width: 100%;
+            background: #409db6;
+            color: #1C2529;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .btn-book:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body style="background: #f6f5f7;">
+    <div class="booking-container">
+        <a href="user-dashboard.html" style="text-decoration: none; color: #666;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        
+        <div id="loading" style="text-align: center; padding: 50px;">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Loading Garage Details...</p>
+        </div>
+
+        <div id="booking-content" style="display: none;">
+            <div class="garage-header">
+                <h1 id="garageName">Loading...</h1>
+                <p id="garageAddress"><i class="fas fa-map-marker-alt"></i> Loading...</p>
+                <div id="garageRating"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="vehicleSelect">Select Vehicle</label>
+                <select id="vehicleSelect" required>
+                    <option value="">Choose a vehicle</option>
+                </select>
+            </div>
+
+            <div class="service-selection">
+                <h3>Select Services</h3>
+                <div id="servicesList">
+                    <!-- Services will be populated here -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bookingDate">Preferred Date & Time</label>
+                <input type="datetime-local" id="bookingDate" required>
+            </div>
+
+            <div class="booking-summary">
+                <h3>Booking Summary</h3>
+                <div id="selectedServicesSummary">No services selected</div>
+                <div class="total-price" id="totalPrice">Total: Rs. 0</div>
+            </div>
+
+            <button class="btn-book" id="confirmBooking">Confirm Appointment</button>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/booking.js"></script>
+</body>
+</html>

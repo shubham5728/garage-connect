@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage Mechanic - Welcome</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+    <div class="container" id="container">
+        <div class="form-container garage-container">
+            <form action="garage-dashboard.html">
+                <h1>Garage Login</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your account</span>
+                <input type="email" placeholder="Email" required />
+                <input type="password" placeholder="Password" required />
+                <a href="#">Forgot your password?</a>
+                <a href="signup.html" style="margin-top: 10px;">Don't have an account? Sign Up</a>
+                <button type="submit" style="margin-top: 10px;">Sign In</button>
+            </form>
+        </div>
+
+        <div class="form-container user-container">
+            <form action="user-dashboard.html">
+                <h1>User Login</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your account</span>
+                <input type="email" placeholder="Email" required />
+                <input type="password" placeholder="Password" required />
+                <a href="#">Forgot your password?</a>
+                 <a href="signup.html" style="margin-top: 10px;">Don't have an account? Sign Up</a>
+                <button type="submit" style="margin-top: 10px;">Sign In</button>
+            </form>
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1 style="color:white">Are You A Vehicle Owner?</h1>
+                    <p>Log in to find trusted mechanics and get back on the road faster!</p>
+                    <button class="ghost" id="signInUser">User Login</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Are You A Garage Owner?</h1>
+                    <p>Join our network to connect with new customers and grow your business.</p>
+                    <button class="ghost" id="signInGarage">Garage Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/api.js"></script>
+    <script>
+        const signInGarageButton = document.getElementById('signInGarage');
+        const signInUserButton = document.getElementById('signInUser');
+        const container = document.getElementById('container');
+
+        signInGarageButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+
+        signInUserButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+
+        // Login Logic
+        async function handleLogin(e, role) {
+            e.preventDefault();
+            const form = e.target;
+            const email = form.querySelector('input[type="email"]').value;
+            const password = form.querySelector('input[type="password"]').value;
+            const btn = form.querySelector('button');
+
+            try {
+                btn.disabled = true;
+                btn.innerText = 'Signing In...';
+
+                const data = await window.gcApi.login(email, password);
+                
+                if (data.success) {
+                    // Role check
+                    if (data.user.role !== role && role !== 'ANY') {
+                        throw new Error(`This account is not registered as a ${role.toLowerCase().replace('_', ' ')}`);
+                    }
+
+                    // Redirect
+                    if (data.user.role === 'GARAGE_OWNER') {
+                        window.location.href = 'garage-dashboard.html';
+                    } else if (data.user.role === 'CUSTOMER') {
+                        window.location.href = 'user-dashboard.html';
+                    } else if (data.user.role === 'ADMIN') {
+                        alert('Admin login detected. Redirecting to user dashboard for now.');
+                        window.location.href = 'user-dashboard.html';
+                    }
+                }
+            } catch (err) {
+                alert(err.message);
+                btn.disabled = false;
+                btn.innerText = 'Sign In';
+            }
+        }
+
+        document.querySelector('.garage-container form').addEventListener('submit', (e) => handleLogin(e, 'GARAGE_OWNER'));
+        document.querySelector('.user-container form').addEventListener('submit', (e) => handleLogin(e, 'CUSTOMER'));
+    </script>
+</body>
+</html>

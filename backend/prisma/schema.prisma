@@ -1,0 +1,186 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CUSTOMER
+  GARAGE_OWNER
+  ADMIN
+}
+
+enum VehicleType {
+  TWO_WHEELER
+  FOUR_WHEELER
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum ServicePricingType {
+  FIXED
+  INSPECTION_BASED
+  PARTS_DEPENDENT
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  role         Role     @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  customer Customer?
+  garages  Garage[]
+
+  @@index([email])
+}
+
+model Customer {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  vehicles Vehicle[]
+  bookings Booking[]
+  reviews  Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Garage {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  garageName  String
+  address     String
+  city        String?
+  state       String?
+  pincode     String?
+  contactNo   String?
+  description String?
+  latitude    Float?
+  longitude   Float?
+  rating      Float   @default(0.0)
+  isVerified  Boolean @default(false)
+
+  services Service[]
+  bookings Booking[]
+  reviews  Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([isVerified])
+}
+
+model Vehicle {
+  id         String   @id @default(uuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  make          String
+  model         String
+  year          Int?
+  vehicleNumber String      @unique
+  vehicleType   VehicleType
+
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([vehicleNumber])
+}
+
+model Service {
+  id       String @id @default(uuid())
+  garageId String
+  garage   Garage @relation(fields: [garageId], references: [id])
+
+  name         String
+  description  String?
+  pricingType  ServicePricingType @default(FIXED)
+  basePrice    Float?
+  vehicleTypes VehicleType[]
+
+  bookingItems BookingItem[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([garageId])
+}
+
+model Booking {
+  id         String   @id @default(uuid())
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  garageId   String
+  garage     Garage   @relation(fields: [garageId], references: [id])
+  vehicleId  String
+  vehicle    Vehicle  @relation(fields: [vehicleId], references: [id])
+
+  scheduledDate  DateTime
+  customerIssue  String?
+  notes          String?
+  pickupRequired Boolean       @default(false)
+  pickupAddress  String?
+  status         BookingStatus @default(PENDING)
+  totalAmount    Float?
+
+  items  BookingItem[]
+  review Review?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  approvedAt  DateTime?
+  completedAt DateTime?
+
+  @@index([customerId])
+  @@index([garageId])
+  @@index([vehicleId])
+  @@index([status])
+}
+
+model BookingItem {
+  id        String  @id @default(uuid())
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+  price     Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([bookingId, serviceId])
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  bookingId  String   @unique
+  booking    Booking  @relation(fields: [bookingId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  garageId   String
+  garage     Garage   @relation(fields: [garageId], references: [id])
+
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@index([garageId])
+}

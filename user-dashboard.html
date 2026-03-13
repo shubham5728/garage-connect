@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - GarageConnect</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-car-wrench"></i> Garage<span>Connect</span>
+        </div>
+        <ul class="nav">
+            <li class="active" data-target="search"><a href="#"><i class="fas fa-search"></i> Find a Garage</a></li>
+            <li data-target="bookings"><a href="#"><i class="fas fa-calendar-alt"></i> My Bookings</a></li>
+            <li data-target="vehicles"><a href="#"><i class="fas fa-car"></i> My Vehicles</a></li>
+            <li data-target="profile"><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+            <li class="logout"><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h2>Welcome Back, User!</h2>
+            <div class="header-icons">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-cog"></i>
+            </div>
+        </header>
+
+        <main>
+            <section id="search" class="content-section active">
+                <div class="search-container">
+                    <input type="text" placeholder="Search by service, name, or location...">
+                    <button>Search</button>
+                </div>
+                <div class="filters">
+                    <select>
+                        <option>Distance</option>
+                        <option>Under 5km</option>
+                        <option>5km - 10km</option>
+                    </select>
+                    <select>
+                        <option>Rating</option>
+                        <option>4+ Stars</option>
+                        <option>3+ Stars</option>
+                    </select>
+                    <select>
+                        <option>Vehicle Type</option>
+                        <option>2-Wheeler</option>
+                        <option>4-Wheeler</option>
+                    </select>
+                    <select>
+                        <option>Services</option>
+                        <option>EV Service</option>
+                        <option>Full Service</option>
+                        <option>Part Replacement</option>
+                    </select>
+                    <button class="emergency-btn" style = "background-color: red"><i class="fas fa-first-aid"></i> Emergency</button>
+                </div>
+                <div class="results-area">
+                    <div class="garage-list">
+                        <div class="garage-card">
+                            <img src="Auto pro.png" alt="Garage Image">
+                            <div class="card-details">
+                                <h3>Pro Auto Works</h3>
+                                <p class="rating">
+                                    <i class="fas fa-star"></i> 4.8 (120 Reviews)
+                                </p>
+                                <p><i class="fas fa-map-marker-alt"></i> 2.5 km away</p>
+                                <p><i class="fas fa-tag"></i> Full Service, EV, Parts</p>
+                                <button class="view-btn">View & Book</button>
+                            </div>
+                        </div>
+                         <div class="garage-card">
+                            <img src="speedy motors.jpg" alt="Garage Image">
+                            <div class="card-details">
+                                <h3>Speedy Motors</h3>
+                                <p class="rating">
+                                    <i class="fas fa-star"></i> 4.5 (85 Reviews)
+                                </p>
+                                <p><i class="fas fa-map-marker-alt"></i> 4.1 km away</p>
+                                <p><i class="fas fa-tag"></i> Small Service, Parts</p>
+                                <button class="view-btn">View & Book</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map-view">
+                         <img src="map.jpg" alt="Map Placeholder" style="width:100%; height:100%; object-fit: cover;">
+                    </div>
+                </div>
+            </section>
+
+            <section id="bookings" class="content-section">
+                <h2>Your Upcoming and Past Bookings</h2>
+                <div class="booking-card">
+                    <h4>Full Vehicle Service at Pro Auto Works</h4>
+                    <p><i class="fas fa-calendar-alt"></i> Date: September 5, 2025</p>
+                    <p><i class="fas fa-clock"></i> Time: 10:00 AM</p>
+                    <p><span class="status upcoming">Upcoming</span></p>
+                </div>
+                <div class="booking-card">
+                    <h4>Part Replacement at Speedy Motors</h4>
+                    <p><i class="fas fa-calendar-alt"></i> Date: July 20, 2025</p>
+                    <p><i class="fas fa-clock"></i> Time: 02:30 PM</p>
+                    <p><span class="status completed">Completed</span></p>
+                </div>
+            </section>
+
+             <section id="vehicles" class="content-section">
+                 <h2>Manage Your Vehicles</h2>
+                 <div class="vehicle-card">
+                    <h4>My Sedan - ABC 1234</h4>
+                    <p><strong>Type:</strong> 4-Wheeler</p>
+                    <p><strong>Last Service:</strong> July 20, 2025</p>
+                    <button>View History</button>
+                 </div>
+                 <button class="add-btn">+ Add New Vehicle</button>
+            </section>
+
+            <section id="profile" class="content-section">
+                 <h2>Your Profile Information</h2>
+                 <form class="profile-form">
+                     <input type="text" value="Vraj Patel">
+                     <input type="email" value="vrajpatel01@gmail.com">
+                     <button>Update Profile</button>
+                 </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Vehicle Modal -->
+    <div id="addVehicleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Vehicle</h3>
+                <span class="close-btn">&times;</span>
+            </div>
+            <form id="addVehicleForm">
+                <input type="text" id="vMake" placeholder="Make (e.g. Honda)" required>
+                <input type="text" id="vModel" placeholder="Model (e.g. Civic)" required>
+                <input type="number" id="vYear" placeholder="Year" required>
+                <input type="text" id="vNumber" placeholder="Vehicle Number" required>
+                <select id="vType">
+                    <option value="FOUR_WHEELER">4-Wheeler</option>
+                    <option value="TWO_WHEELER">2-Wheeler</option>
+                </select>
+                <button type="submit">Add Vehicle</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rate Your Service</h3>
+                <span id="closeReview" class="close-btn">&times;</span>
+            </div>
+            <form id="reviewForm">
+                <input type="hidden" id="reviewBookingId">
+                <div style="margin-bottom:15px; text-align:center;">
+                    <label style="display:block; margin-bottom:10px;">How was your experience?</label>
+                    <select id="reviewRating" style="width: auto; min-width:100px;">
+                        <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                        <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                        <option value="3">⭐⭐⭐ (3/5)</option>
+                        <option value="2">⭐⭐ (2/5)</option>
+                        <option value="1">⭐ (1/5)</option>
+                    </select>
+                </div>
+                <textarea id="reviewComment" placeholder="Write a short comment (optional)..." rows="3"></textarea>
+                <button type="submit">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/user-dashboard.js"></script>
+</body>
+</html>

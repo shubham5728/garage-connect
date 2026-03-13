@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garage Mechanic - Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1C2529;
+            --primary-light: #409db6;
+            --text-light: #FFFFFF;
+            --text-dark: #333333;
+            --background-light: #f6f5f7;
+            --font-main: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: var(--background-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-main);
+            height: 100vh;
+            margin: 0;
+        }
+
+        .signup-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            padding: 40px 50px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin: 0 0 20px 0;
+            color: var(--text-dark);
+        }
+
+        input, select, textarea {
+            background-color: #eee;
+            border: none;
+            padding: 12px 15px;
+            margin: 8px 0;
+            width: 100%;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        
+        button {
+            border-radius: 20px;
+            border: 1px solid var(--primary-light);
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 12px;
+            font-weight: bold;
+            padding: 12px 45px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: transform 80ms ease-in;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        #vehicleOwnerDetails, #garageOwnerDetails {
+            display: none; /* Hidden by default */
+        }
+
+        a {
+            color: #333;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 15px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="signup-container">
+        <form action="index.html">
+            <h1>Create Account</h1>
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="Enter your full name" required />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email" required />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create a password" required />
+            </div>
+
+            <div class="form-group">
+                <label for="userType">I am a...</label>
+                <select id="userType">
+                    <option value="vehicleOwner">Vehicle Owner</option>
+                    <option value="garageOwner">Garage Owner</option>
+                </select>
+            </div>
+
+            <div id="vehicleOwnerDetails">
+                <div class="form-group">
+                    <label for="vehicleMake">Vehicle Brand Name & Model(e.g., Toyota Legender, BMW M5)</label>
+                    <input type="text" id="vehicleMake" placeholder="Enter your vehicle's Name & Model" />
+                </div>
+                <div class="form-group">
+                    <label for="vehicleNumber">Vehicle Number (e.g., GJ 01 PT 0101)</label>
+                    <input type="text" id="vehicleNumber" placeholder="Enter your vehicle's Number" required/>
+                </div>
+            </div>
+
+            <div id="garageOwnerDetails">
+                <div class="form-group">
+                    <label for="garageName">Garage Name</label>
+                    <input type="text" id="garageName" placeholder="Enter your garage's name" />
+                </div>
+                <div class="form-group">
+                    <label for="garageAddress">Garage Address</label>
+                    <textarea id="garageAddress" placeholder="Enter your garage's full address" rows="3"></textarea>
+                </div>
+            </div>
+
+            <button type="submit">Sign Up</button>
+            <a href="index.html">Already have an account? Sign In</a>
+        </form>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Get references to the elements
+        const userTypeSelect = document.getElementById('userType');
+        const vehicleOwnerDetails = document.getElementById('vehicleOwnerDetails');
+        const garageOwnerDetails = document.getElementById('garageOwnerDetails');
+        const signupForm = document.querySelector('form');
+
+        // Function to toggle form fields based on selection
+        function toggleDetails() {
+            const selectedType = userTypeSelect.value;
+            
+            if (selectedType === 'vehicleOwner') {
+                vehicleOwnerDetails.style.display = 'block';
+                garageOwnerDetails.style.display = 'none';
+                document.getElementById('vehicleNumber').required = true;
+                document.getElementById('garageName').required = false;
+            } else if (selectedType === 'garageOwner') {
+                vehicleOwnerDetails.style.display = 'none';
+                garageOwnerDetails.style.display = 'block';
+                document.getElementById('vehicleNumber').required = false;
+                document.getElementById('garageName').required = true;
+            }
+        }
+
+        // Add event listener to the select dropdown
+        userTypeSelect.addEventListener('change', toggleDetails);
+
+        // Call the function once on page load to set the initial state
+        document.addEventListener('DOMContentLoaded', toggleDetails);
+
+        // Registration Logic
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = signupForm.querySelector('button');
+            const userType = userTypeSelect.value;
+
+            const payload = {
+                fullName: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+            };
+
+            try {
+                btn.disabled = true;
+                btn.innerText = 'Creating Account...';
+
+                let response;
+                if (userType === 'vehicleOwner') {
+                    payload.vehicle = {
+                        make: document.getElementById('vehicleMake').value || 'Unspecified',
+                        model: 'Model', // Simplification for now
+                        year: new Date().getFullYear(),
+                        vehicleNumber: document.getElementById('vehicleNumber').value,
+                        vehicleType: 'FOUR_WHEELER' // Defaulting for simple signup form
+                    };
+                    response = await window.gcApi.registerCustomer(payload);
+                } else {
+                    payload.garage = {
+                        garageName: document.getElementById('garageName').value,
+                        address: document.getElementById('garageAddress').value,
+                    };
+                    response = await window.gcApi.registerOwner(payload);
+                }
+
+                if (response.success) {
+                    alert('Account created successfully! Please sign in.');
+                    window.location.href = 'index.html';
+                }
+            } catch (err) {
+                alert(err.message);
+                btn.disabled = false;
+                btn.innerText = 'Sign Up';
+            }
+        });
+    </script>
+
+</body>
+</html>
