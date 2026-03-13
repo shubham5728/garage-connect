@@ -63,28 +63,55 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         loadServices();
 
-        // Load Bookings
+        // Load Bookings & Calculate Stats
         const loadBookings = async () => {
             const container = document.getElementById('bookings');
             container.innerHTML = '<h2>All Bookings</h2>';
             try {
                 const data = await window.gcApi.fetch(`/bookings/garage/${garage.id}`);
                 if (data.success) {
-                    if (data.bookings.length === 0) {
+                    const bookings = data.bookings;
+                    
+                    // 1. Calculate Real-time Stats
+                    const now = new Date();
+                    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                    const today = now.toDateString();
+
+                    const todayCount = bookings.filter(b => new Date(b.scheduledDate).toDateString() === today).length;
+                    const monthlyRevenue = bookings
+                        .filter(b => b.status === 'COMPLETED' && new Date(b.completedAt) >= startOfMonth)
+                        .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+
+                    document.querySelector('.stat-card:nth-child(1) p').innerText = todayCount;
+                    document.querySelector('.stat-card:nth-child(2) p').innerText = `Rs. ${monthlyRevenue.toLocaleString()}`;
+
+                    if (bookings.length === 0) {
                         container.innerHTML += '<p>No bookings yet.</p>';
                     } else {
-                        data.bookings.forEach(b => {
+                        bookings.forEach(b => {
                             const date = new Date(b.scheduledDate).toLocaleDateString();
                             container.innerHTML += `
                                 <div class="booking-card">
-                                    <h4>${b.services.map(s => s.service.name).join(', ')}</h4>
+                                    <div style="display:flex; justify-content:space-between;">
+                                        <h4>${b.services.map(s => s.service.name).join(', ')}</h4>
+                                        <span class="status ${b.status.toLowerCase()}">${b.status}</span>
+                                    </div>
                                     <p><strong>Customer:</strong> ${b.customer.user.fullName}</p>
                                     <p><i class="fas fa-calendar-alt"></i> Date: ${date}</p>
-                                    <p><span class="status ${b.status.toLowerCase()}">${b.status}</span></p>
                                     ${b.status === 'PENDING' ? `
                                         <div style="margin-top:10px">
                                             <button class="approve-btn" onclick="updateBookingStatus('${b.id}', 'APPROVED')">Approve</button>
                                             <button class="decline-btn" onclick="updateBookingStatus('${b.id}', 'CANCELLED')">Decline</button>
+                                        </div>
+                                    ` : ''}
+                                    ${b.status === 'APPROVED' ? `
+                                        <div style="margin-top:10px">
+                                            <button class="approve-btn" onclick="updateBookingStatus('${b.id}', 'IN_PROGRESS')">Start Work</button>
+                                        </div>
+                                    ` : ''}
+                                    ${b.status === 'IN_PROGRESS' ? `
+                                        <div style="margin-top:10px">
+                                            <button class="approve-btn" onclick="updateBookingStatus('${b.id}', 'COMPLETED')">Mark Completed</button>
                                         </div>
                                     ` : ''}
                                 </div>

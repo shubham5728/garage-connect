@@ -17,36 +17,71 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // 3. Tab Loaders
+    let allGarages = [];
     const loadGarages = async () => {
         const resultsArea = document.querySelector('.garage-list');
         resultsArea.innerHTML = '<p>Loading garages...</p>';
         try {
             const data = await window.gcApi.fetch('/garages');
             if (data.success) {
-                resultsArea.innerHTML = data.garages.map(g => `
-                    <div class="garage-card">
-                        <img src="${g.images?.[0] || 'Auto pro.png'}" alt="Garage Image">
-                        <div class="card-details">
-                            <h3>${g.garageName}</h3>
-                            <p class="rating">
-                                <i class="fas fa-star"></i> ${g.rating.toFixed(1)} (${g.reviewCount} Reviews)
-                            </p>
-                            <p><i class="fas fa-map-marker-alt"></i> ${g.address}, ${g.city}</p>
-                            <p><i class="fas fa-tag"></i> ${g.services?.map(s => s.name).join(', ') || 'General Service'}</p>
-                            <button class="view-btn" onclick="window.location.href='booking.html?id=${g.id}'">View & Book</button>
-                        </div>
-                    </div>
-                `).join('');
+                allGarages = data.garages;
+                renderGarages(allGarages);
             }
         } catch (err) {
             resultsArea.innerHTML = `<p>Error loading garages: ${err.message}</p>`;
         }
     };
 
+    const renderGarages = (garages) => {
+        const resultsArea = document.querySelector('.garage-list');
+        if (garages.length === 0) {
+            resultsArea.innerHTML = '<p>No garages found matching your criteria.</p>';
+            return;
+        }
+        resultsArea.innerHTML = garages.map(g => `
+            <div class="garage-card">
+                <img src="${g.images?.[0] || 'Auto pro.png'}" alt="Garage Image">
+                <div class="card-details">
+                    <h3>${g.garageName}</h3>
+                    <p class="rating">
+                        <i class="fas fa-star"></i> ${g.rating.toFixed(1)} (${g.reviewCount} Reviews)
+                    </p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${g.address}, ${g.city}</p>
+                    <p><i class="fas fa-tag"></i> ${g.services?.map(s => s.name).join(', ') || 'General Service'}</p>
+                    <button class="view-btn" onclick="window.location.href='booking.html?id=${g.id}'">View & Book</button>
+                </div>
+            </div>
+        `).join('');
+    };
+
+    const applyFilters = () => {
+        const rating = parseFloat(document.getElementById('filterRating').value);
+        const type = document.getElementById('filterType').value;
+        const service = document.getElementById('filterService').value;
+        const query = document.querySelector('.search-container input').value.toLowerCase();
+
+        const filtered = allGarages.filter(g => {
+            const matchesRating = g.rating >= rating;
+            const matchesType = !type || g.services.some(s => s.vehicleTypes.includes(type));
+            const matchesService = !service || g.services.some(s => s.name.includes(service));
+            const matchesSearch = !query || g.garageName.toLowerCase().includes(query) || 
+                                 (g.city && g.city.toLowerCase().includes(query)) ||
+                                 g.services.some(s => s.name.toLowerCase().includes(query));
+            
+            return matchesRating && matchesType && matchesService && matchesSearch;
+        });
+        renderGarages(filtered);
+    };
+
+    document.getElementById('filterRating').addEventListener('change', applyFilters);
+    document.getElementById('filterType').addEventListener('change', applyFilters);
+    document.getElementById('filterService').addEventListener('change', applyFilters);
+    document.querySelector('.search-container button').addEventListener('click', applyFilters);
+    document.querySelector('.search-container input').addEventListener('keyup', (e) => { if (e.key === 'Enter') applyFilters(); });
+
     const loadBookings = async () => {
         const bookingsSection = document.getElementById('bookings');
         const container = bookingsSection.querySelector('.booking-card')?.parentElement || bookingsSection;
-        // Keep the H2, clear the rest
         const h2 = bookingsSection.querySelector('h2');
         container.innerHTML = '';
         if(h2) container.appendChild(h2);
@@ -60,13 +95,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                     data.bookings.forEach(b => {
                         const date = new Date(b.scheduledDate).toLocaleDateString();
                         const time = new Date(b.scheduledDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        
+                        // Progress Tracker Logic
+                        const statusOrder = ['PENDING', 'APPROVED', 'IN_PROGRESS', 'COMPLETED'];
+                        const currentIndex = statusOrder.indexOf(b.status);
+                        const progressHtml = `
+                            <div class="progress-container" style="display:flex; gap:10px; margin-top:10px;">
+                                ${statusOrder.map((s, idx) => `
+                                    <div class="prog-dot" style="flex:1; height:4px; border-radius:2px; background:${idx <= currentIndex ? '#409db6' : '#eee'};"></div>
+                                `).join('')}
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:5px; color:#999;">
+                                <span>Pending</span><span>Done</span>
+                            </div>
+                        `;
+
                         container.innerHTML += `
                             <div class="booking-card">
-                                <h4>${b.services.map(s => s.service.name).join(', ')} at ${b.garage.garageName}</h4>
-                                <p><i class="fas fa-calendar-alt"></i> Date: ${date}</p>
-                                <p><i class="fas fa-clock"></i> Time: ${time}</p>
-                                <p><span class="status ${b.status.toLowerCase()}">${b.status}</span></p>
-                                ${b.status === 'COMPLETED' ? `<button class="view-btn" onclick="openReviewModal('${b.id}')" style="margin-top:10px">Leave Review</button>` : ''}
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <h4>${b.services.map(s => s.service.name).join(', ')} at ${b.garage.garageName}</h4>
+                                    <span class="status ${b.status.toLowerCase()}">${b.status}</span>
+                                </div>
+                                <p><i class="fas fa-calendar-alt"></i> Date: ${date} | <i class="fas fa-clock"></i> Time: ${time}</p>
+                                ${progressHtml}
+                                ${b.status === 'COMPLETED' ? `<button class="view-btn" onclick="openReviewModal('${b.id}')" style="margin-top:15px">Leave Review</button>` : ''}
                             </div>
                         `;
                     });

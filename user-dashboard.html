@@ -37,26 +37,21 @@
                     <button>Search</button>
                 </div>
                 <div class="filters">
-                    <select>
-                        <option>Distance</option>
-                        <option>Under 5km</option>
-                        <option>5km - 10km</option>
+                    <select id="filterRating">
+                        <option value="0">Min Rating</option>
+                        <option value="4">4+ Stars</option>
+                        <option value="3">3+ Stars</option>
                     </select>
-                    <select>
-                        <option>Rating</option>
-                        <option>4+ Stars</option>
-                        <option>3+ Stars</option>
+                    <select id="filterType">
+                        <option value="">Vehicle Type</option>
+                        <option value="TWO_WHEELER">2-Wheeler</option>
+                        <option value="FOUR_WHEELER">4-Wheeler</option>
                     </select>
-                    <select>
-                        <option>Vehicle Type</option>
-                        <option>2-Wheeler</option>
-                        <option>4-Wheeler</option>
-                    </select>
-                    <select>
-                        <option>Services</option>
-                        <option>EV Service</option>
-                        <option>Full Service</option>
-                        <option>Part Replacement</option>
+                    <select id="filterService">
+                        <option value="">Services</option>
+                        <option value="General Service">General Service</option>
+                        <option value="Full Service">Full Service</option>
+                        <option value="Part Replacement">Part Replacement</option>
                     </select>
                     <button class="emergency-btn" style = "background-color: red"><i class="fas fa-first-aid"></i> Emergency</button>
                 </div>
