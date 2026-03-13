@@ -39,7 +39,7 @@ const api = {
             headers
         };
 
-        const response = await fetch(`${API_URL}${endpoint}`, config);
+        const response = await fetch(`${this.BASE_URL}${endpoint}`, config);
         const data = await response.json();
 
         if (!response.ok) {
