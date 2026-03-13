@@ -79,8 +79,20 @@ async function main() {
     include: { customer: { include: { vehicles: true } } }
   });
 
-  const customerId = customerUser.customer!.id;
-  const vehicleId = customerUser.customer!.vehicles[0].id;
+  const customer = customerUser.customer;
+  if (!customer || !customer.vehicles[0]) {
+    throw new Error('Seed failed: Customer or vehicle not created correctly');
+  }
+
+  const customerId = customer.id;
+  const vehicleId = customer.vehicles[0].id;
+
+  const standardService = garage.services.find(s => s.name === 'Standard Oil Change');
+  const brakeService = garage.services.find(s => s.name === 'Brake Inspection');
+
+  if (!standardService || !brakeService) {
+    throw new Error('Seed failed: Services not created correctly');
+  }
 
   // 5. Create a PENDING Booking
   await prisma.booking.create({
@@ -91,10 +103,10 @@ async function main() {
       scheduledDate: new Date(Date.now() + 86400000), // Tomorrow
       customerIssue: 'Need an oil change before my road trip.',
       status: 'PENDING',
-      totalAmount: garage.services[0].basePrice,
+      totalAmount: standardService.basePrice,
       items: {
         create: [
-          { serviceId: garage.services[0].id, price: garage.services[0].basePrice || 0 }
+          { serviceId: standardService.id, price: standardService.basePrice || 0 }
         ]
       }
     }
@@ -109,10 +121,10 @@ async function main() {
       scheduledDate: new Date(Date.now() - 86400000), // Yesterday
       customerIssue: 'Brakes squeaking',
       status: 'COMPLETED',
-      totalAmount: garage.services[1].basePrice,
+      totalAmount: brakeService.basePrice,
       items: {
         create: [
-          { serviceId: garage.services[1].id, price: garage.services[1].basePrice || 0 }
+          { serviceId: brakeService.id, price: brakeService.basePrice || 0 }
         ]
       }
     }
