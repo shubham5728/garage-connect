@@ -20,14 +20,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     targetSection.classList.add('active');
                 }
             });
-        } else {
-            // Handle Logout
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (confirm('Are you sure you want to logout?')) {
-                    window.gcApi.logout();
-                }
-            });
         }
     });
+
+    // Handle Logout separately — bind on both the <li> and the <a> inside it
+    const logoutItem = document.querySelector('.sidebar .nav li.logout');
+    if (logoutItem) {
+        const logoutLink = logoutItem.querySelector('a');
+
+        const doLogout = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (confirm('Are you sure you want to logout?')) {
+                window.gcApi.logout();
+            }
+        };
+
+        logoutItem.addEventListener('click', doLogout);
+        if (logoutLink) {
+            logoutLink.addEventListener('click', doLogout);
+        }
+    }
 });
