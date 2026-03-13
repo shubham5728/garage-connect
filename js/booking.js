@@ -61,13 +61,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Load User Vehicles
-        const meData = await window.gcApi.fetch('/auth/me');
-        const dbCustomer = await window.gcApi.fetch('/users/profile/customer'); // Assuming this returns profile with vehicles
-        // Actually, let's use a specific check if profile includes vehicles
-        // For now, based on previous backend work:
-        const customerProfile = await window.gcApi.fetch('/users/profile/customer');
-        if (customerProfile.success && customerProfile.customer.vehicles) {
-            vehicleSelect.innerHTML += customerProfile.customer.vehicles.map(v => `
+        const profileData = await window.gcApi.fetch('/users/me');
+        if (profileData.success && profileData.profile.vehicles) {
+            vehicleSelect.innerHTML += profileData.profile.vehicles.map(v => `
                 <option value="${v.id}">${v.make} ${v.model} (${v.vehicleNumber})</option>
             `).join('');
         }
