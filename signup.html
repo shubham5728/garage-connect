@@ -200,6 +200,7 @@
 
                 let response;
                 if (userType === 'vehicleOwner') {
+                    payload.role = 'CUSTOMER';
                     payload.vehicle = {
                         make: document.getElementById('vehicleMake').value || 'Unspecified',
                         model: 'Model', // Simplification for now
@@ -209,6 +210,7 @@
                     };
                     response = await window.gcApi.registerCustomer(payload);
                 } else {
+                    payload.role = 'GARAGE_OWNER';
                     payload.garage = {
                         garageName: document.getElementById('garageName').value,
                         address: document.getElementById('garageAddress').value,
