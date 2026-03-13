@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="card-details">
                     <h3>${g.garageName}</h3>
                     <p class="rating">
-                        <i class="fas fa-star"></i> ${g.rating.toFixed(1)} (${g.reviewCount} Reviews)
+                        <i class="fas fa-star"></i> ${g.rating.toFixed(1)} (${g._count?.reviews ?? g.reviewCount ?? 0} Reviews)
                     </p>
                     <p><i class="fas fa-map-marker-alt"></i> ${g.address}, ${g.city}</p>
                     <p><i class="fas fa-tag"></i> ${g.services?.map(s => s.name).join(', ') || 'General Service'}</p>

@@ -50,7 +50,8 @@ export const searchGarages = async (req: Request, res: Response): Promise<void> 
     let garages = await prisma.garage.findMany({
       where: whereClause,
       include: {
-        services: true
+        services: true,
+        _count: { select: { reviews: true } }
       }
     });
 
