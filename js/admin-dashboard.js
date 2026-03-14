@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             garagesTbody.innerHTML = data.garages.map(g => `
                 <tr>
-                    <td><strong>${g.name}</strong></td>
-                    <td>${g.owner?.fullName || 'Unknown'} (${g.owner?.email || ''})</td>
-                    <td>${g.address}<br><small>${g.city}, ${g.state} ${g.zipCode}</small></td>
+                    <td><strong>${g.garageName}</strong></td>
+                    <td>${g.user?.fullName || 'Unknown'} (${g.user?.email || ''})</td>
+                    <td>${g.address}<br><small>${g.city}, ${g.state} ${g.pincode}</small></td>
                     <td><span class="badge ${g.isVerified ? 'badge-verified' : 'badge-unverified'}">${g.isVerified ? 'Verified' : 'Unverified'}</span></td>
                     <td>
                         <button class="btn-verify" onclick="verifyGarage('${g.id}')" ${g.isVerified ? 'disabled' : ''}>
