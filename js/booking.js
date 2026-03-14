@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             garageData = data.garage;
             document.getElementById('garageName').innerText = garageData.garageName;
             document.getElementById('garageAddress').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${garageData.address}, ${garageData.city}`;
-            document.getElementById('garageRating').innerHTML = `<i class="fas fa-star" style="color:#f1c40f"></i> ${garageData.rating.toFixed(1)} (${garageData.reviewCount} Reviews)`;
+            document.getElementById('garageRating').innerHTML = `<i class="fas fa-star" style="color:#f1c40f"></i> ${garageData.rating.toFixed(1)} (${garageData.reviews?.length || 0} Reviews)`;
 
             // Populate Services
             servicesList.innerHTML = garageData.services.map(s => `
@@ -58,6 +58,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                     updateSummary();
                 });
             });
+
+            // Populate Reviews
+            const reviewsContainer = document.getElementById('reviews-all');
+            if (garageData.reviews && garageData.reviews.length > 0) {
+                reviewsContainer.innerHTML = garageData.reviews.map(r => `
+                    <div style="padding: 15px; border-bottom: 1px solid #eee;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <strong>${r.customer.user.fullName}</strong>
+                            <span style="color:#f1c40f">${'⭐'.repeat(r.rating)}</span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin: 0;">${r.comment || 'No comment provided.'}</p>
+                        <small style="color:#999">${new Date(r.createdAt).toLocaleDateString()}</small>
+                    </div>
+                `).join('');
+            } else {
+                reviewsContainer.innerHTML = '<p>No reviews yet for this garage.</p>';
+            }
         }
 
         // Load User Vehicles

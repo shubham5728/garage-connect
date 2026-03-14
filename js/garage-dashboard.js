@@ -1,3 +1,32 @@
+// Global functions for HTML onclick handlers
+window.deleteService = async (serviceId) => {
+    try {
+        const data = await window.gcApi.fetch(`/services/${serviceId}`, {
+            method: 'DELETE'
+        });
+        if (data.success) {
+            alert('Service deleted successfully!');
+            window.location.reload();
+        }
+    } catch (err) {
+        alert(err.message);
+    }
+};
+
+window.updateBookingStatus = async (id, status) => {
+    try {
+        const data = await window.gcApi.fetch(`/bookings/${id}/status`, {
+            method: 'PATCH',
+            body: JSON.stringify({ status })
+        });
+        if (data.success) {
+            window.location.reload();
+        }
+    } catch (err) {
+        alert(err.message);
+    }
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Auth & Session check
     const user = await window.gcApi.checkAuth();
@@ -79,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     const todayCount = bookings.filter(b => new Date(b.scheduledDate).toDateString() === today).length;
                     const monthlyRevenue = bookings
-                        .filter(b => b.status === 'COMPLETED' && new Date(b.completedAt) >= startOfMonth)
+                        .filter(b => b.status === 'COMPLETED' && b.completedAt && new Date(b.completedAt) >= startOfMonth)
                         .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
 
                     document.querySelector('.stat-card:nth-child(1) p').innerText = todayCount;

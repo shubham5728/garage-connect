@@ -1,3 +1,14 @@
+window.openReviewModal = (bookingId) => {
+    const modal = document.getElementById('reviewModal');
+    const input = document.getElementById('reviewBookingId');
+    if (modal && input) {
+        input.value = bookingId;
+        modal.classList.add('active');
+    } else {
+        console.error('Review Modal elements not found');
+    }
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Auth & Session check
     const user = await window.gcApi.checkAuth();
@@ -236,5 +247,43 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     loadVehicles();
+
+    // 7. Review Modal Logic
+    const reviewModal = document.getElementById('reviewModal');
+    const reviewForm = document.getElementById('reviewForm');
+    const closeReview = document.getElementById('closeReview');
+
+    closeReview?.addEventListener('click', () => reviewModal.classList.remove('active'));
+    window.addEventListener('click', (e) => { if (e.target === reviewModal) reviewModal.classList.remove('active'); });
+
+    reviewForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = reviewForm.querySelector('button');
+        const bookingId = document.getElementById('reviewBookingId').value;
+        const rating = parseInt(document.getElementById('reviewRating').value);
+        const comment = document.getElementById('reviewComment').value;
+
+        try {
+            btn.disabled = true;
+            btn.innerText = 'Submitting...';
+
+            const data = await window.gcApi.fetch('/reviews', {
+                method: 'POST',
+                body: JSON.stringify({ bookingId, rating, comment })
+            });
+
+            if (data.success) {
+                alert('Review submitted successfully!');
+                reviewModal.classList.remove('active');
+                reviewForm.reset();
+                loadBookings(); // Refresh to remove button
+            }
+        } catch (err) {
+            alert(err.message || 'Failed to submit review');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = 'Submit Review';
+        }
+    });
 });
 
