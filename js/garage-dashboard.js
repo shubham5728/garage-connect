@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const container = document.getElementById('bookings');
             container.innerHTML = '<h2>All Bookings</h2>';
             try {
-                const data = await window.gcApi.fetch(`/bookings/garage/${garage.id}`);
+                const data = await window.gcApi.fetch(`/bookings/garage`);
                 if (data.success) {
                     const bookings = data.bookings;
                     

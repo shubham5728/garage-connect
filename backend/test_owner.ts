@@ -74,9 +74,14 @@ async function runOwnerTests() {
   }
 
   console.log("\n6) Checking Bookings Lifecycle...");
-  const bookingsRes = await fetch(`${baseUrl}/bookings/garage/${myGarage.id}`, {
+  const bookingsRes = await fetch(`${baseUrl}/bookings/garage`, {
     headers: { "Authorization": `Bearer ${token}` }
   });
+  
+  if (!bookingsRes.ok) {
+      console.error("Booking fetch failed with status:", bookingsRes.status, await bookingsRes.text());
+      return;
+  }
   const bookingsData = await bookingsRes.json();
   
   if (bookingsData.success && bookingsData.bookings.length > 0) {
@@ -86,18 +91,12 @@ async function runOwnerTests() {
         
         // Progress to COMPLETED
         let currentStatus = pendingBooking.status;
-        const targetStatuses = ["APPROVED", "IN_PROGRESS", "COMPLETED"];
+        const targetStatuses = ["PENDING", "APPROVED", "IN_PROGRESS", "COMPLETED"];
         const startIndex = targetStatuses.indexOf(currentStatus);
         
         if (startIndex !== -1) {
-            for (let i = startIndex; i < targetStatuses.length; i++) {
-                const nextStatus = targetStatuses[i];
-                if (currentStatus === nextStatus && nextStatus !== "PENDING") continue; // PENDING not in targetStatuses array logic, handled implicitly
-                
-                let target = nextStatus;
-                if (currentStatus === "PENDING") target = "APPROVED";
-                if (currentStatus === "APPROVED") target = "IN_PROGRESS";
-                if (currentStatus === "IN_PROGRESS") target = "COMPLETED";
+            for (let i = startIndex + 1; i < targetStatuses.length; i++) {
+                let target = targetStatuses[i];
 
                 console.log(`   -> Transitioning to ${target}...`);
                 const transitionRes = await fetch(`${baseUrl}/bookings/${pendingBooking.id}/status`, {
