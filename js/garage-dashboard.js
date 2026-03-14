@@ -9,16 +9,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2. Fetch Garage Data
     let garage = null;
     try {
-        const garagesData = await window.gcApi.fetch('/garages'); // Assuming filter for own garage or similar
-        // For now, let's just get the first one where owner is this user
-        // Better: Backend should have /api/garages/mine
-        // I'll fetch /api/garages/mine if it exists, otherwise find from list
+        const garagesData = await window.gcApi.fetch('/garages'); 
         const allGarages = garagesData.garages;
-        garage = allGarages.find(g => g.ownerId === user.id);
+        garage = allGarages.find(g => g.userId === user.id);
         
         if (!garage) {
-            // If they are owner but have no garage, they shouldn't be here or need to create one
-            console.error("No garage found for owner");
+            console.error("No garage found for owner", user.id);
         }
     } catch (err) {
         console.error("Could not fetch garage info", err);
