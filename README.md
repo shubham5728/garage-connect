@@ -2,6 +2,13 @@
 
 **Garage-Connect** is a comprehensive, full-stack ecosystem designed to bridge the gap between vehicle owners and local garages. This platform streamlines the entire automotive service lifecycle—from discovery and booking to status tracking and review management.
 
+## 🚦 Project Status: Core MVP Complete
+> **Garage Connect is a live, demo-ready MVP with verified end-to-end customer booking flow and key garage-owner booking actions.** Advanced features such as reviews, admin workflows, and full owner management are implemented but pending production verification.
+> 
+> * **Backend API**: Verified for core MVP flows (Auth, Garage Search, Bookings, Vehicles)
+> * **Frontend Natural Flow**: Verified (Signup → Login → Search → Book → See Bookings → Logout)
+> * **Production Environment**: Live on Netlify (Frontend) and Render (Backend)
+
 ---
 
 ## 🏗️ System Architecture
