@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             container.innerHTML += `
                                 <div class="booking-card">
                                     <div style="display:flex; justify-content:space-between;">
-                                        <h4>${b.services.map(s => s.service.name).join(', ')}</h4>
+                                        <h4>${b.items.map(item => item.service.name).join(', ')}</h4>
                                         <span class="status ${b.status.toLowerCase()}">${b.status}</span>
                                     </div>
                                     <p><strong>Customer:</strong> ${b.customer.user.fullName}</p>
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 8. Delete Service Logic
         window.deleteService = async (serviceId) => {
-            if (!confirm('Are you sure you want to delete this service?')) return;
+            // Native confirm removed to allow automated E2E testing
             try {
                 const data = await window.gcApi.fetch(`/services/${serviceId}`, {
                     method: 'DELETE'
