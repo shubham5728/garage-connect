@@ -84,14 +84,12 @@
                         throw new Error(`This account is not registered as a ${role.toLowerCase().replace('_', ' ')}`);
                     }
 
-                    // Redirect
                     if (data.user.role === 'GARAGE_OWNER') {
                         window.location.href = 'garage-dashboard.html';
                     } else if (data.user.role === 'CUSTOMER') {
                         window.location.href = 'user-dashboard.html';
                     } else if (data.user.role === 'ADMIN') {
-                        alert('Admin login detected. Redirecting to user dashboard for now.');
-                        window.location.href = 'user-dashboard.html';
+                        window.location.href = 'admin-dashboard.html';
                     }
                 }
             } catch (err) {

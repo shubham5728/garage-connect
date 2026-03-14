@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - GarageConnect</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .table-wrapper { overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; font-weight: 600; color: #333; }
+        tr:hover { background-color: #f1f5f9; }
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+        .badge-verified { background: #d4edda; color: #155724; }
+        .badge-unverified { background: #f8d7da; color: #721c24; }
+        .btn-verify, .btn-delete { border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; color: white; font-weight: 500;}
+        .btn-verify { background: #28a745; }
+        .btn-verify:hover { background: #218838; }
+        .btn-verify:disabled { background: #6c757d; cursor: not-allowed; }
+        .btn-delete { background: #dc3545; }
+        .btn-delete:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i> GC<span>Admin</span>
+        </div>
+        <ul class="nav">
+            <li class="active" data-target="users"><a href="#"><i class="fas fa-users"></i> All Users</a></li>
+            <li data-target="garages"><a href="#"><i class="fas fa-warehouse"></i> All Garages</a></li>
+            <!-- Reviews moderation can be an extension -->
+            <li class="logout"><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h2 id="adminGreeting">Welcome Back, Admin!</h2>
+            <div class="header-icons">
+                <i class="fas fa-shield-alt" title="Admin Mode"></i>
+            </div>
+        </header>
+
+        <main>
+            <!-- Users Section -->
+            <section id="users" class="content-section active">
+                <h2>Registered Users</h2>
+                <div class="table-wrapper">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Garages Section -->
+            <section id="garages" class="content-section">
+                <h2>Garage Verification</h2>
+                <div class="table-wrapper">
+                    <table id="garagesTable">
+                        <thead>
+                            <tr>
+                                <th>Garage Name</th>
+                                <th>Owner</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>
