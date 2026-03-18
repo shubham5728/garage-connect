@@ -7,7 +7,7 @@
 > 
 > * **Backend API**: Verified for core MVP flows (Auth, Garage Search, Bookings, Vehicles)
 > * **Frontend Natural Flow**: Verified (Signup → Login → Search → Book → See Bookings → Logout)
-> * **Production Environment**: Live on Netlify (Frontend) and Render (Backend)
+> * **Production Environment**: Live on Vercel (Frontend) and Render (Backend)
 
 ---
 
