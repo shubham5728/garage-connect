@@ -55,7 +55,7 @@
             border-radius: 20px;
             border: 1px solid var(--primary-light);
             background-color: var(--primary-light);
-            color: var(--primary-dark);
+            color: var(--text-dark);
             font-size: 12px;
             font-weight: bold;
             padding: 12px 45px;
