@@ -53,7 +53,11 @@ const api = {
                     data = await response.json();
                 } else {
                     const text = await response.text();
-                    console.error("Non-JSON response:", text);
+                    console.error(`Non-JSON response (${response.status}):`, text);
+                    // If it's a Vercel error, the text might contain hints
+                    if (text.includes("Vercel") || response.status === 500) {
+                        throw new Error(`Server Error (Status ${response.status}). Check Vercel logs for Prisma/Database errors.`);
+                    }
                     throw new Error("Server returned non-JSON response");
                 }
 

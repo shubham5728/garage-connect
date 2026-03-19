@@ -3,7 +3,16 @@ import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 const connectionString = `${process.env.DATABASE_URL}`;
-const pool = new Pool({ connectionString });
+
+const pool = new Pool({ 
+  connectionString,
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false
+});
+
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
+});
+
 const adapter = new PrismaPg(pool as any);
 const prisma = new PrismaClient({ adapter });
 
